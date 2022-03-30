@@ -28,7 +28,7 @@ function calculateIntervals() {
     intervals = []
     intervalsDefault = []
 
-    for(let i = -6; i < 6; i++) {
+    for (let i = -6; i < 6; i++) {
         let elevate = order
 
         let numA = 0
@@ -36,30 +36,30 @@ function calculateIntervals() {
 
         let k = i + 1
 
-        while(elevate >= 1) {
-            for(let j = 0; j < numbers.length ; j++) {
-                numA += numbers[j]*(i**(elevate))
-                numB += numbers[j]*(k**(elevate))
+        while (elevate >= 1) {
+            for (let j = 0; j < numbers.length; j++) {
+                numA += numbers[j] * (i ** (elevate))
+                numB += numbers[j] * (k ** (elevate))
 
-                if(numA < 0 && numB > 0) {
+                if (numA < 0 && numB > 0) {
                     intervals.push([i, k])
-            
+
                     if (i < j) {
                         intervalsDefault.push([i, k])
                     }
-            
+
                     if (i > j) {
                         intervalsDefault.push([j, k])
                     }
                 }
-            
-                if(numA > 0 && numB < 0) {
+
+                if (numA > 0 && numB < 0) {
                     intervals.push([k, i])
-            
+
                     if (i < j) {
                         intervalsDefault.push([i, k])
                     }
-            
+
                     if (i > j) {
                         intervalsDefault.push([j, k])
                     }
@@ -74,33 +74,33 @@ function calculateIntervals() {
 function calculateRoots() {
     roots = []
 
-    for(let i = 0; i < intervals.length; i++) {
-        while(stopCriteria > precision) {
+    for (let i = 0; i < intervals.length; i++) {
+        while (stopCriteria > precision) {
             let result = 0
             let elevate = order
 
-            let average =  (intervals[i][0] + intervals[i][1]) / 2
+            let average = (intervals[i][0] + intervals[i][1]) / 2
 
-            for(let j = 0; j < numbers.length ; j++) {
-                result += numbers[j]*(average**(elevate))
+            for (let j = 0; j < numbers.length; j++) {
+                result += numbers[j] * (average ** (elevate))
 
                 elevate--
             }
 
-            if(result > 0) {
-            intervals[i][1] = average
+            if (result > 0) {
+                intervals[i][1] = average
             }
-        
-            if(result < 0) {
-            intervals[i][0] = average
+
+            if (result < 0) {
+                intervals[i][0] = average
             }
-        
+
             stopCriteria = Math.abs(intervals[i][0] - intervals[i][1])
         }
 
         roots.push([(intervals[i][0] + intervals[i][1]) / 2])
 
-        stopCriteria = 1 
+        stopCriteria = 1
     }
 }
 
@@ -120,14 +120,14 @@ function showResults() {
     let resultRoots = ""
     let resultIntervals = ""
 
-    for(let i = 0; i < roots.length; i++) {
+    for (let i = 0; i < roots.length; i++) {
         resultRoots += `<li>Raíz ${i + 1}:  ${roots[i]}</li> <br />`
     }
 
-    for(let i = 0; i < intervalsDefault.length; i++) {
+    for (let i = 0; i < intervalsDefault.length; i++) {
         resultIntervals += `<li>Intervalo ${i + 1}: [${intervalsDefault[i][0]}, ${intervalsDefault[i][1]}]</li> <br />`
     }
-                        
+
     showResultRoots.innerHTML = resultRoots
     showResultIntervals.innerHTML = resultIntervals
     showResultPrecision.innerHTML = `<li>Erro menor que ${precision}</li>`
@@ -142,7 +142,7 @@ function calculateAll() {
     drawFunction()
 }
 
-function addInputs(){
+function addInputs() {
     order = 0
 
     order = document.getElementById("getOrder").value;
@@ -159,9 +159,9 @@ function addInputs(){
         const divElement = document.createElement("div")
 
         const labelElement = document.createElement("label")
-        
+
         divElement.appendChild(labelElement)
-        
+
         labelElement.innerHTML = "Número " + letter
 
         let numInput = document.createElement("input");
@@ -177,12 +177,12 @@ function addInputs(){
 }
 
 function drawFunction() {
-    for(let i = 0; i < numbers.length - 1; i++) {
-        if(numbers[i + 1] >= 0) {
-             expression += `${numbers[i]}*x^${functionOrder} +`
+    for (let i = 0; i < numbers.length - 1; i++) {
+        if (numbers[i + 1] >= 0) {
+            expression += `${numbers[i]}*x^${functionOrder} +`
         }
 
-        if(numbers[i + 1] < 0) {
+        if (numbers[i + 1] < 0) {
             expression += `${numbers[i]}*x^${functionOrder}`
         }
 
@@ -197,20 +197,23 @@ function drawFunction() {
     let ratio = contentsBounds.width / width;
     width *= ratio;
     height *= ratio;
-    
-    functionPlot({
-      target: "#root",
-      disableZoom: false,
-      width: 800,
-      height: 600,
-      yAxis: { domain: [-10, 10] },
-      grid: true,
-      data: [
-        {
-          fn: expression,
+
+    function Plot() {
+        const text = {
+            target: "#root",
+            disableZoom: false,
+            width: 800,
+            height: 600,
+            yAxis: { domain: [-10, 10] },
+            grid: true,
+            data: [
+                {
+                    fn: expression,
+                }
+            ]
         }
-      ]
-    });
+    }
+
 }
 
 document.getElementById("generateInputs").addEventListener('click', addInputs)
